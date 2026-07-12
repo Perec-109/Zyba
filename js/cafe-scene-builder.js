@@ -54,6 +54,13 @@ const CAFE_BUILDER = (() => {
     return m;
   }
 
+  function sphere(r, material, wSegs = 14, hSegs = 10) {
+    const m = new THREE.Mesh(new THREE.SphereGeometry(r, wSegs, hSegs), material);
+    m.castShadow = true;
+    m.receiveShadow = true;
+    return m;
+  }
+
   /* ---------- reusable materials ---------- */
   const M = {
     wall: mat(COLOR.wall),
@@ -76,19 +83,32 @@ const CAFE_BUILDER = (() => {
 
   function plant(detail = 3) {
     const g = new THREE.Group();
-    const pot = cyl(0.32, 0.24, 0.4, M.wood);
+    const pot = cyl(0.32, 0.24, 0.4, mat(0x8b5538, { roughness: 0.94 }), 18);
     pot.position.y = 0.2;
     g.add(pot);
+    const soil = cyl(0.265, 0.265, 0.018, mat(0x24150f, { roughness: 1 }), 18, false);
+    soil.position.y = 0.405;
+    g.add(soil);
     const leafCount = detail >= 3 ? 7 : detail === 2 ? 5 : 3;
     for (let i = 0; i < leafCount; i++) {
-      const leaf = cyl(0.02, 0.16, 0.9, M.sage, 5);
+      const angle = i / leafCount * Math.PI * 2;
+      const stem = cyl(0.012, 0.018, 0.52 + (i % 3) * 0.08, M.sageDark, 6);
+      stem.position.set(Math.cos(angle) * 0.08, 0.65, Math.sin(angle) * 0.08);
+      stem.rotation.z = Math.cos(angle) * 0.22;
+      stem.rotation.x = Math.sin(angle) * 0.22;
+      g.add(stem);
+
+      const leaf = sphere(0.22, i % 3 === 0 ? M.sageDark : M.sage, 10, 7);
+      leaf.scale.set(0.55, 1.65 + (i % 2) * 0.25, 0.18);
       leaf.position.set(
-        Math.cos(i / leafCount * Math.PI * 2) * 0.18,
-        0.75 + Math.random() * 0.2,
-        Math.sin(i / leafCount * Math.PI * 2) * 0.18
+        Math.cos(angle) * 0.22,
+        0.88 + (i % 3) * 0.08,
+        Math.sin(angle) * 0.22
       );
-      leaf.rotation.z = (Math.random() - 0.5) * 0.9;
-      leaf.rotation.x = (Math.random() - 0.5) * 0.5;
+      leaf.rotation.order = 'YXZ';
+      leaf.rotation.y = -angle;
+      leaf.rotation.z = Math.cos(angle) * 0.35;
+      leaf.rotation.x = Math.sin(angle) * 0.22;
       g.add(leaf);
     }
     return g;
@@ -120,6 +140,15 @@ const CAFE_BUILDER = (() => {
     const cup = cyl(0.06, 0.05, 0.08, M.ceramic, 12);
     cup.position.y = 0.05;
     g.add(cup);
+    const coffee = cyl(0.052, 0.052, 0.006, mat(0x2a130b, { roughness: 0.22 }), 16, false);
+    coffee.position.y = 0.094;
+    g.add(coffee);
+    const handle = new THREE.Mesh(new THREE.TorusGeometry(0.034, 0.009, 6, 12, Math.PI * 1.55), M.ceramic);
+    handle.position.set(0.063, 0.057, 0);
+    handle.rotation.y = Math.PI / 2;
+    handle.rotation.z = -Math.PI * 0.78;
+    handle.castShadow = true;
+    g.add(handle);
     g.userData.steamOrigin = new THREE.Vector3(0, 0.1, 0);
     return g;
   }
@@ -285,28 +314,74 @@ const CAFE_BUILDER = (() => {
     const g = new THREE.Group();
     const z = -44;
 
-    const board = box(2.6, 1.6, 0.06, mat(0x14100c, { roughness: 0.9 }));
-    board.position.set(-3.3, 2.0, z);
+    const boardX = 3.25;
+    const boardY = 2.05;
+    const boardMat = mat(0x171914, { roughness: 0.98 });
+    const board = box(2.72, 1.62, 0.075, boardMat);
+    // Keep the physical menu board opposite the HTML menu copy so the two
+    // layers complement one another instead of visually colliding.
+    board.position.set(boardX, boardY, z);
     g.add(board);
-    const frame = box(2.75, 1.75, 0.04, M.wood);
-    frame.position.set(-3.3, 2.0, z - 0.02);
-    g.add(frame);
+
+    // Real frame pieces instead of a second solid box behind the board.
+    const frameMat = mat(0x9a643b, { roughness: 0.58 });
+    [[2.98, .105, 0, .865], [2.98, .105, 0, -.865], [.105, 1.82, -1.44, 0], [.105, 1.82, 1.44, 0]]
+      .forEach(([w, h, ox, oy]) => {
+        const rail = box(w, h, .12, frameMat);
+        rail.position.set(boardX + ox, boardY + oy, z + .015);
+        g.add(rail);
+      });
+
+    // A few restrained chalk strokes make it read as a menu board up close.
+    const chalk = mat(0xd8d0b9, { roughness: 1 });
+    const chalkRows = [
+      [-.58, 1.25, .045], [-.30, 1.9, .026], [-.08, 2.05, .026],
+      [.14, 1.75, .026], [.36, 2.1, .026], [.58, 1.55, .026]
+    ];
+    chalkRows.forEach(([oy, w, h], i) => {
+      const line = box(w, h, .012, chalk, false);
+      line.position.set(boardX - .42 + (i % 2) * .16, boardY + oy, z + .045);
+      g.add(line);
+      const price = box(.22, h, .012, chalk, false);
+      price.position.set(boardX + .93, boardY + oy, z + .045);
+      g.add(price);
+    });
+
+    const ledge = box(2.86, .09, .22, frameMat);
+    ledge.position.set(boardX, boardY - .94, z + .08);
+    g.add(ledge);
 
     // bean sacks
     for (let i = 0; i < 3; i++) {
-      const sack = cyl(0.32, 0.4, 0.6, mat(0x8a6a3f, { roughness: 1 }), 10);
-      sack.position.set(-4.2 + i * 0.75, 0.3, z + 1.4);
-      sack.rotation.z = (Math.random() - 0.5) * 0.15;
-      g.add(sack);
+      const sackGroup = new THREE.Group();
+      const sackMat = mat(i === 1 ? 0x9a7448 : 0x84613d, { roughness: 1 });
+      const sack = sphere(0.42, sackMat, 12, 9);
+      sack.scale.set(.9, 1.25, .72);
+      sack.position.y = .38;
+      sackGroup.add(sack);
+      const neck = cyl(.19, .27, .2, sackMat, 10);
+      neck.position.y = .77;
+      sackGroup.add(neck);
+      const tie = new THREE.Mesh(new THREE.TorusGeometry(.2, .018, 5, 12), M.wood);
+      tie.rotation.x = Math.PI / 2;
+      tie.position.y = .69;
+      sackGroup.add(tie);
+      const label = box(.27, .2, .015, M.cream, false);
+      label.position.set(0, .4, .305);
+      sackGroup.add(label);
+      sackGroup.position.set(2.55 + i * .72, 0, z + 1.4 + (i % 2) * .08);
+      sackGroup.rotation.z = (i - 1) * .07;
+      sackGroup.rotation.y = (i - 1) * .16;
+      g.add(sackGroup);
     }
 
     // hanging plant near menu
     const p = plant(settings.plantDetail);
-    p.position.set(1.6, 0.5, z + 0.3);
+    p.position.set(-1.6, 0.5, z + 0.3);
     g.add(p);
 
     const hl = hangingLight();
-    hl.position.set(-3.3, 3.3, z + 0.4);
+    hl.position.set(boardX, 3.45, z + 0.4);
     g.add(hl);
 
     scene.add(g);
