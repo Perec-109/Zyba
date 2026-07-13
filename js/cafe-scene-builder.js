@@ -28,6 +28,9 @@ const CAFE_BUILDER = (() => {
     glass: mat(C.glass, { roughness: .12, metalness: .08, transparent: true, opacity: .22 }),
   };
 
+  const SHOW_DECOR = PERF.tier !== 'low';
+  const SHOW_FULL_DECOR = PERF.tier === 'high';
+
   function mesh(geometry, material, shadows = true) {
     const object = new THREE.Mesh(geometry, material);
     object.castShadow = shadows && PERF.settings.shadows;
@@ -96,6 +99,17 @@ const CAFE_BUILDER = (() => {
     });
     const light = new THREE.PointLight(C.glow, intensity, 5.2, 2);
     light.position.set(position[0], position[1] - .08, position[2]);
+    parent.add(light);
+  }
+
+  async function addFloorLamp(parent, position, height = 1.7) {
+    await MODEL_LIBRARY.add(parent, 'floorLamp', {
+      position,
+      size: height,
+      fitAxis: 'y',
+    });
+    const light = new THREE.PointLight(C.glow, .42, 4.2, 2);
+    light.position.set(position[0], position[1] + height * .84, position[2]);
     parent.add(light);
   }
 
@@ -172,6 +186,10 @@ const CAFE_BUILDER = (() => {
       MODEL_LIBRARY.add(group, 'bench', { position: [-3.45, 0, .2], size: 1.72, fitAxis: 'x' }),
       MODEL_LIBRARY.add(group, 'doormat', { position: [2.55, .02, facadeZ + 1], size: 1.35, fitAxis: 'x' }),
       MODEL_LIBRARY.add(group, 'plantLarge', { position: [4.25, 0, -.8], size: 1.15, fitAxis: 'y' }),
+      SHOW_DECOR ? MODEL_LIBRARY.add(group, 'coatRack', { position: [-2.25, 0, -1.15], size: 1.72, fitAxis: 'y', rotation: [0, .35, 0] }) : Promise.resolve(),
+      SHOW_DECOR ? MODEL_LIBRARY.add(group, 'trashcan', { position: [-4.25, 0, 1.12], size: .58, fitAxis: 'y' }) : Promise.resolve(),
+      SHOW_DECOR ? MODEL_LIBRARY.add(group, 'plant1', { position: [3.55, 0, .7], size: .72, fitAxis: 'y' }) : Promise.resolve(),
+      SHOW_FULL_DECOR ? MODEL_LIBRARY.add(group, 'tableLamp', { position: [-3.45, .52, .2], size: .42, fitAxis: 'y' }) : Promise.resolve(),
     ]);
 
     scene.add(group);
@@ -203,6 +221,38 @@ const CAFE_BUILDER = (() => {
       MODEL_LIBRARY.add(group, 'donut', { position: [.12, 1.04, z + .3], size: .15, fitAxis: 'max' }),
       MODEL_LIBRARY.add(group, 'cake', { position: [.42, 1.04, z + .25], size: .2, fitAxis: 'y' })
     );
+
+    if (SHOW_DECOR) {
+      tasks.push(
+        MODEL_LIBRARY.add(group, 'fridge', { position: [1.65, 0, z - .7], size: 1.72, fitAxis: 'y', rotation: [0, Math.PI, 0] }),
+        MODEL_LIBRARY.add(group, 'microwave', { position: [-3.82, 2.02, z - .72], size: .48, fitAxis: 'x' }),
+        MODEL_LIBRARY.add(group, 'toaster', { position: [.72, 1.03, z + .12], size: .36, fitAxis: 'x' }),
+        MODEL_LIBRARY.add(group, 'sink', { position: [.95, 0, z], size: 1, fitAxis: 'y', rotation: [0, Math.PI, 0] }),
+        MODEL_LIBRARY.add(group, 'cupcake', { position: [-.72, 1.04, z + .31], size: .14, fitAxis: 'y' }),
+        MODEL_LIBRARY.add(group, 'pie', { position: [-.88, 1.04, z + .27], size: .18, fitAxis: 'max' }),
+        MODEL_LIBRARY.add(group, 'waffle', { position: [.72, 1.04, z + .3], size: .16, fitAxis: 'max' }),
+        MODEL_LIBRARY.add(group, 'frappe', { position: [1.02, 1.03, z + .22], size: .24, fitAxis: 'y' }),
+        MODEL_LIBRARY.add(group, 'plate', { position: [-.38, 1.035, z + .32], size: .23, fitAxis: 'max' }),
+        MODEL_LIBRARY.add(group, 'honey', { position: [-2.72, 1.02, z + .34], size: .22, fitAxis: 'y' }),
+        MODEL_LIBRARY.add(group, 'pepperMill', { position: [-2.42, 1.02, z + .34], size: .24, fitAxis: 'y' })
+      );
+    }
+
+    if (SHOW_FULL_DECOR) {
+      [-3.65, -2.2, -.75].forEach((x) => {
+        tasks.push(MODEL_LIBRARY.add(group, 'upperCabinet', {
+          position: [x, 2.72, z - .88],
+          size: 1.18,
+          fitAxis: 'x',
+        }));
+      });
+      tasks.push(
+        MODEL_LIBRARY.add(group, 'baguette', { position: [.98, 1.04, z + .34], size: .58, fitAxis: 'x', rotation: [0, .45, 0] }),
+        MODEL_LIBRARY.add(group, 'oilBottle', { position: [-3.2, 2.12, z - .58], size: .28, fitAxis: 'y' }),
+        MODEL_LIBRARY.add(group, 'glass', { position: [-2.9, 2.12, z - .58], size: .22, fitAxis: 'y' }),
+        MODEL_LIBRARY.add(group, 'bowl', { position: [-2.58, 2.12, z - .58], size: .22, fitAxis: 'max' })
+      );
+    }
 
     [[-.1, .27], [.4, .18], [-3.55, .31]].forEach(([x, dz]) => {
       tasks.push(MODEL_LIBRARY.add(group, 'coffee', {
@@ -248,13 +298,20 @@ const CAFE_BUILDER = (() => {
       MODEL_LIBRARY.add(group, 'cookie', { position: [-3.7, .78, z + .55], size: .15, fitAxis: 'max' }),
       MODEL_LIBRARY.add(group, 'cupSaucer', { position: [-3.25, .78, z + .55], size: .13, fitAxis: 'y' }),
       addWarmLamp(group, [3.25, 4.35, z + .15], .72),
+      SHOW_DECOR ? MODEL_LIBRARY.add(group, 'bookcase', { position: [-4.45, 0, z - .45], size: 1.95, fitAxis: 'y', rotation: [0, Math.PI / 2, 0] }) : Promise.resolve(),
+      SHOW_DECOR ? MODEL_LIBRARY.add(group, 'books', { position: [-3.52, .78, z + .42], size: .48, fitAxis: 'x', rotation: [0, .25, 0] }) : Promise.resolve(),
+      SHOW_DECOR ? MODEL_LIBRARY.add(group, 'pancakes', { position: [-3.82, .78, z + .72], size: .16, fitAxis: 'y' }) : Promise.resolve(),
+      SHOW_DECOR ? MODEL_LIBRARY.add(group, 'glass', { position: [-3.08, .78, z + .72], size: .2, fitAxis: 'y' }) : Promise.resolve(),
+      SHOW_DECOR ? addFloorLamp(group, [-1.25, 0, z - .7], 1.58) : Promise.resolve(),
+      SHOW_FULL_DECOR ? MODEL_LIBRARY.add(group, 'rugSoft', { position: [-3.5, .02, z + .55], size: 2.55, fitAxis: 'x' }) : Promise.resolve(),
+      SHOW_FULL_DECOR ? MODEL_LIBRARY.add(group, 'radio', { position: [-4.2, 1.42, z + .05], size: .42, fitAxis: 'x', rotation: [0, Math.PI / 2, 0] }) : Promise.resolve(),
     ]);
 
     scene.add(group);
   }
 
   async function addCafeSet(parent, options) {
-    const { x, z, chairs = 2, rotation = 0, laptop = false } = options;
+    const { x, z, chairs = 2, rotation = 0, laptop = false, accent = 0 } = options;
     const tasks = [MODEL_LIBRARY.add(parent, 'tableRound', {
       position: [x, 0, z],
       size: .76,
@@ -287,6 +344,37 @@ const CAFE_BUILDER = (() => {
       }));
     }
 
+    if (SHOW_DECOR) {
+      const snack = accent % 2 ? 'cupcake' : 'waffle';
+      tasks.push(
+        MODEL_LIBRARY.add(parent, 'plate', {
+          position: [x - .2, .77, z + .16],
+          size: .2,
+          fitAxis: 'max',
+          rotation: [0, rotation, 0],
+        }),
+        MODEL_LIBRARY.add(parent, snack, {
+          position: [x - .2, .785, z + .16],
+          size: .11,
+          fitAxis: 'max',
+        }),
+        MODEL_LIBRARY.add(parent, 'glass', {
+          position: [x + .32, .77, z - .12],
+          size: .16,
+          fitAxis: 'y',
+        })
+      );
+    }
+
+    if (SHOW_FULL_DECOR && accent % 2 === 0) {
+      tasks.push(MODEL_LIBRARY.add(parent, 'books', {
+        position: [x + .02, .77, z - .28],
+        size: .34,
+        fitAxis: 'x',
+        rotation: [0, rotation + .2, 0],
+      }));
+    }
+
     await Promise.all(tasks);
   }
 
@@ -301,7 +389,14 @@ const CAFE_BUILDER = (() => {
       { x: 0, z: z + 9, chairs: 2, rotation: 2.4 },
     ];
 
-    const tasks = sets.map((set) => addCafeSet(group, set));
+    if (SHOW_DECOR) {
+      sets.push(
+        { x: 0, z: z - 10.5, chairs: 3, rotation: .5 },
+        { x: -2.75, z: z + 9.5, chairs: 2, rotation: 1.35 }
+      );
+    }
+
+    const tasks = sets.map((set, index) => addCafeSet(group, { ...set, accent: index }));
     for (let index = 0; index < 3; index++) {
       const windowObject = windowPane(1.7, 2.35);
       windowObject.rotation.y = Math.PI / 2;
@@ -327,6 +422,41 @@ const CAFE_BUILDER = (() => {
       addWarmLamp(group, [-.5, 4.35, z + 6], .58)
     );
 
+    if (SHOW_DECOR) {
+      [-4.2, 0, 4.2].forEach((offset, index) => {
+        tasks.push(
+          MODEL_LIBRARY.add(group, 'coffeeTable', {
+            position: [-3.15, 0, z + offset],
+            size: .46,
+            fitAxis: 'y',
+            rotation: [0, Math.PI / 2, 0],
+          }),
+          MODEL_LIBRARY.add(group, index === 1 ? 'radio' : 'books', {
+            position: [-3.15, .47, z + offset],
+            size: index === 1 ? .36 : .4,
+            fitAxis: 'x',
+            rotation: [0, Math.PI / 2, 0],
+          })
+        );
+      });
+      tasks.push(
+        addFloorLamp(group, [-4.05, 0, z - 2.2], 1.72),
+        addFloorLamp(group, [-4.05, 0, z + 5.2], 1.72),
+        MODEL_LIBRARY.add(group, 'coatRack', { position: [4.15, 0, z - 10], size: 1.7, fitAxis: 'y', rotation: [0, -.4, 0] }),
+        MODEL_LIBRARY.add(group, 'trashcan', { position: [4.35, 0, z + 8.5], size: .58, fitAxis: 'y' }),
+        MODEL_LIBRARY.add(group, 'plant1', { position: [4.28, 0, z - 8], size: .78, fitAxis: 'y' }),
+        MODEL_LIBRARY.add(group, 'plant3', { position: [4.25, 0, z + 7.2], size: .84, fitAxis: 'y' })
+      );
+    }
+
+    if (SHOW_FULL_DECOR) {
+      tasks.push(
+        MODEL_LIBRARY.add(group, 'bookcase', { position: [4.62, 0, z + 10.2], size: 1.92, fitAxis: 'y', rotation: [0, -Math.PI / 2, 0] }),
+        MODEL_LIBRARY.add(group, 'speaker', { position: [4.32, 1.25, z + 10.2], size: .3, fitAxis: 'y', rotation: [0, -Math.PI / 2, 0] }),
+        MODEL_LIBRARY.add(group, 'rugSoft', { position: [-3.2, .02, z], size: 5.1, fitAxis: 'z', scale: [1.2, 1, 1] })
+      );
+    }
+
     await Promise.all(tasks);
     scene.add(group);
   }
@@ -348,6 +478,16 @@ const CAFE_BUILDER = (() => {
       MODEL_LIBRARY.add(group, 'rugRound', { position: [-.2, .02, z - 1.8], size: 3.1, fitAxis: 'x', scale: [1.25, 1, 1] }),
       MODEL_LIBRARY.add(group, 'plantLarge', { position: [-2.5, 0, z - 2.6], size: 1.25, fitAxis: 'y' }),
       addWarmLamp(group, [.4, 4.35, z - 2.5], .72),
+      SHOW_DECOR ? MODEL_LIBRARY.add(group, 'coffeeTable', { position: [-.15, 0, z - 1.45], size: .42, fitAxis: 'y' }) : Promise.resolve(),
+      SHOW_DECOR ? MODEL_LIBRARY.add(group, 'plate', { position: [-.15, .43, z - 1.45], size: .24, fitAxis: 'max' }) : Promise.resolve(),
+      SHOW_DECOR ? MODEL_LIBRARY.add(group, 'pie', { position: [-.15, .445, z - 1.45], size: .13, fitAxis: 'max' }) : Promise.resolve(),
+      SHOW_DECOR ? MODEL_LIBRARY.add(group, 'books', { position: [-.55, .43, z - 1.42], size: .38, fitAxis: 'x', rotation: [0, .18, 0] }) : Promise.resolve(),
+      SHOW_DECOR ? MODEL_LIBRARY.add(group, 'bookcase', { position: [4.42, 0, z - 3.05], size: 1.85, fitAxis: 'y', rotation: [0, -Math.PI / 2, 0] }) : Promise.resolve(),
+      SHOW_DECOR ? addFloorLamp(group, [2.95, 0, z - 2.45], 1.62) : Promise.resolve(),
+      SHOW_DECOR ? MODEL_LIBRARY.add(group, 'plant2', { position: [3.75, 0, z - 1.35], size: .86, fitAxis: 'y' }) : Promise.resolve(),
+      SHOW_FULL_DECOR ? MODEL_LIBRARY.add(group, 'radio', { position: [4.15, 1.28, z - 3.05], size: .38, fitAxis: 'x', rotation: [0, -Math.PI / 2, 0] }) : Promise.resolve(),
+      SHOW_FULL_DECOR ? MODEL_LIBRARY.add(group, 'tableLamp', { position: [1.65, .56, z - 2.88], size: .34, fitAxis: 'y' }) : Promise.resolve(),
+      SHOW_FULL_DECOR ? MODEL_LIBRARY.add(group, 'rugRectangle', { position: [2.35, .018, z - 1.75], size: 2.2, fitAxis: 'x', rotation: [0, .08, 0] }) : Promise.resolve(),
     ]);
 
     scene.add(group);
