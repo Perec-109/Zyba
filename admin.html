@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Zyba — заказы</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css?v=20260713-1">
+</head>
+<body>
+  <header class="admin-head">
+    <div><a href="index.html" class="admin-logo">ZYBA</a><span>Панель заказов</span></div>
+    <button id="logoutButton" class="ghost" hidden>Выйти</button>
+  </header>
+  <main>
+    <section class="login-card" id="loginCard">
+      <p class="eyebrow">Только для команды</p>
+      <h1>Вход в админку</h1>
+      <p>Введите секретный токен. Он хранится только до закрытия этой вкладки.</p>
+      <form id="loginForm"><input id="tokenInput" type="password" autocomplete="current-password" placeholder="Токен администратора" required><button>Войти</button></form>
+      <p class="message" id="loginMessage"></p>
+    </section>
+    <section id="dashboard" hidden>
+      <div class="dashboard-title"><div><p class="eyebrow">Сегодня в Zyba</p><h1>Заказы</h1></div><button class="ghost" id="refreshButton">Обновить</button></div>
+      <nav class="filters" id="filters">
+        <button class="active" data-status="">Все</button><button data-status="new">Новые</button><button data-status="accepted">Приняты</button><button data-status="ready">Готовы</button><button data-status="completed">Выданы</button><button data-status="cancelled">Отменены</button>
+      </nav>
+      <div class="stats" id="stats"></div>
+      <div class="orders" id="orders"></div>
+      <p class="message" id="dashboardMessage"></p>
+    </section>
+  </main>
+  <script src="js/admin.js?v=20260713-1"></script>
+</body>
+</html>

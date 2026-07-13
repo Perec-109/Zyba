@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="css/style.css?v=20260713-2">
+<link rel="stylesheet" href="css/style.css?v=20260713-3">
 </head>
 <body>
 
@@ -81,12 +81,13 @@
       <span class="station-index">03 · Меню</span>
       <h2 class="display-lg">Что варим сегодня</h2>
       <ul class="menu-list">
-        <li><span class="m-name">Эспрессо</span><span class="m-dots"></span><span class="m-price">180 ₽</span></li>
-        <li><span class="m-name">Флэт уайт</span><span class="m-dots"></span><span class="m-price">280 ₽</span></li>
-        <li><span class="m-name">Фильтр V60</span><span class="m-dots"></span><span class="m-price">260 ₽</span></li>
-        <li><span class="m-name">Раф на овсяном</span><span class="m-dots"></span><span class="m-price">320 ₽</span></li>
-        <li><span class="m-name">Круассан миндальный</span><span class="m-dots"></span><span class="m-price">220 ₽</span></li>
+        <li><span class="m-name">Эспрессо</span><span class="m-dots"></span><span class="m-price">180 ₽</span><button class="menu-add" data-sku="espresso" aria-label="Добавить эспрессо">+</button></li>
+        <li><span class="m-name">Флэт уайт</span><span class="m-dots"></span><span class="m-price">280 ₽</span><button class="menu-add" data-sku="flat-white" aria-label="Добавить флэт уайт">+</button></li>
+        <li><span class="m-name">Фильтр V60</span><span class="m-dots"></span><span class="m-price">260 ₽</span><button class="menu-add" data-sku="v60" aria-label="Добавить фильтр V60">+</button></li>
+        <li><span class="m-name">Раф на овсяном</span><span class="m-dots"></span><span class="m-price">320 ₽</span><button class="menu-add" data-sku="oat-raf" aria-label="Добавить раф на овсяном">+</button></li>
+        <li><span class="m-name">Круассан миндальный</span><span class="m-dots"></span><span class="m-price">220 ₽</span><button class="menu-add" data-sku="almond-croissant" aria-label="Добавить миндальный круассан">+</button></li>
       </ul>
+      <button class="order-open" id="orderOpen">Заказать <span id="cartCount">0</span></button>
     </div>
   </section>
 
@@ -114,6 +115,22 @@
 
 </main>
 
+<dialog class="order-dialog" id="orderDialog">
+  <form class="order-card" id="orderForm">
+    <div class="order-head">
+      <div><span class="station-index">Заказ с собой</span><h2>Ваш заказ</h2></div>
+      <button class="order-close" type="button" id="orderClose" aria-label="Закрыть">×</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="order-total"><span>Итого</span><strong id="orderTotal">0 ₽</strong></div>
+    <label>Имя<input name="name" maxlength="80" autocomplete="name" required></label>
+    <label>Телефон<input name="phone" type="tel" maxlength="24" autocomplete="tel" placeholder="+7 900 000-00-00" required></label>
+    <label>Комментарий<textarea name="note" maxlength="500" rows="3" placeholder="Например, без сахара"></textarea></label>
+    <button class="order-submit" type="submit">Оформить заказ</button>
+    <p class="order-message" id="orderMessage" role="status"></p>
+  </form>
+</dialog>
+
 <script src="js/vendor/three.min.js"></script>
 
 <script src="js/perf.js?v=20260713-2"></script>
@@ -124,5 +141,6 @@
 <script src="js/sound.js?v=20260713-2"></script>
 <script src="js/ui.js?v=20260713-2"></script>
 <script src="js/main.js?v=20260713-2"></script>
+<script src="js/orders.js?v=20260713-3"></script>
 </body>
 </html>

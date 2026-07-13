@@ -54,3 +54,18 @@ python3 -m http.server 8080
 - название, тексты, меню и цены — в `index.html`
 - адрес, часы работы, контакты — секция `#s-contact` в `index.html`
 - палитра и шрифты — токены в начале `css/style.css`
+
+## Заказы и админка
+
+- Заказ оформляется на странице меню и отправляется в Cloudflare Worker.
+- API: `https://zyba-orders-api.perec.workers.dev`
+- Админка: `https://perec-109.github.io/Zyba/admin.html`
+- Заказы хранятся в Cloudflare D1; цены повторно рассчитываются на сервере.
+- Токен админки хранится в секрете Worker `ADMIN_TOKEN` и вводится при входе.
+
+```bash
+npm install
+npm run db:local
+npm run dev:api
+npm run check
+```

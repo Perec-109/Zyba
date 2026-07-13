@@ -1,0 +1,12 @@
+{
+  "name": "zyba-cafe",
+  "private": true,
+  "scripts": {
+    "dev:api": "wrangler dev",
+    "deploy:api": "wrangler deploy",
+    "db:local": "wrangler d1 migrations apply zyba-orders --local",
+    "db:remote": "wrangler d1 migrations apply zyba-orders --remote",
+    "check": "node --check worker/index.js && node --check js/orders.js && node --check js/admin.js"
+  },
+  "devDependencies": { "wrangler": "^4.108.0" }
+}
