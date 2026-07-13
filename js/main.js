@@ -33,7 +33,7 @@
     setProgress(65);
 
     try {
-      SCENE.init();
+      await SCENE.init();
     } catch (err) {
       console.error('3D scene failed to init:', err);
       // graceful fallback: скрываем канвас, сайт остаётся читаемым как обычная страница

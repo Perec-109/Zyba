@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="css/style.css?v=20260713-5">
+<link rel="stylesheet" href="css/style.css?v=20260713-6">
 </head>
 <body>
 
@@ -63,7 +63,7 @@
     <div class="panel panel-hero">
       <p class="eyebrow">Минск · specialty coffee · с 2019</p>
       <h1 class="display-xl">Кофе, ради которого<br><em>меняют маршрут.</em></h1>
-      <p class="panel-lede">Обжариваем зерно прямо за баром, помним ваш обычный заказ и не торопим тех, кто пришёл с ноутбуком. Прокрутите вниз — проведём через всю кофейню.</p>
+      <p class="panel-lede">Обжариваем зерно прямо за баром, помним ваш обычный заказ и не торопим тех, кто пришёл с ноутбуком. Прокрутите вниз — покажем главное.</p>
       <button class="cta-scroll" id="ctaScroll">
         <span>Зайти внутрь</span>
         <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -115,6 +115,24 @@
         <a href="https://maps.google.com/?q=Минск" class="contact-item" target="_blank" rel="noreferrer">Маршрут на карте</a>
         <a href="tel:+375290000000" class="contact-item">+375 (29) 000-00-00</a>
       </div>
+      <div class="photo-gallery" aria-label="Атмосфера Zyba">
+        <figure class="photo-card">
+          <img src="assets/images/espresso-machine.webp" alt="Профессиональная эспрессо-машина за баром" loading="lazy" width="1600" height="1067">
+          <figcaption><strong>Эспрессо-бар</strong><span>Настраиваем каждое утро</span></figcaption>
+        </figure>
+        <figure class="photo-card">
+          <img src="assets/images/coffee-croissant.webp" alt="Чашка кофе с круассаном" loading="lazy" width="1600" height="1067">
+          <figcaption><strong>Свежая выпечка</strong><span>К кофе и с собой</span></figcaption>
+        </figure>
+        <figure class="photo-card">
+          <img src="assets/images/cafe-interior.webp" alt="Современный уютный интерьер кофейни" loading="lazy" width="1600" height="1067">
+          <figcaption><strong>Место для паузы</strong><span>Столы, розетки и Wi-Fi</span></figcaption>
+        </figure>
+        <figure class="photo-card">
+          <img src="assets/images/coffee-roastery.webp" alt="Кофейные зерна в ростере" loading="lazy" width="1600" height="1067">
+          <figcaption><strong>Своя обжарка</strong><span>Небольшими партиями</span></figcaption>
+        </figure>
+      </div>
       <p class="footer-note">© 2026 Zyba · обжарено, сварено и выпито в Минске.</p>
     </div>
   </section>
@@ -138,15 +156,17 @@
 </dialog>
 
 <script src="js/vendor/three.min.js"></script>
+<script src="js/vendor/GLTFLoader.js"></script>
 
 <script src="js/perf.js?v=20260713-2"></script>
-<script src="js/cafe-scene-builder.js?v=20260713-6"></script>
+<script src="js/model-library.js?v=20260713-1"></script>
+<script src="js/cafe-scene-builder.js?v=20260713-8"></script>
 <script src="js/particles.js?v=20260713-2"></script>
 <script src="js/camera-path.js?v=20260713-5"></script>
-<script src="js/scene.js?v=20260713-4"></script>
+<script src="js/scene.js?v=20260713-5"></script>
 <script src="js/sound.js?v=20260713-5"></script>
 <script src="js/ui.js?v=20260713-5"></script>
-<script src="js/main.js?v=20260713-2"></script>
+<script src="js/main.js?v=20260713-3"></script>
 <script src="js/orders.js?v=20260713-3"></script>
 </body>
 </html>

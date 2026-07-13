@@ -11,7 +11,7 @@ const SCENE = (() => {
   let targetScrollProgress = 0;
   let running = false;
 
-  function init() {
+  async function init() {
     const canvas = document.getElementById('scene-canvas');
     const settings = PERF.settings;
 
@@ -64,7 +64,7 @@ const SCENE = (() => {
     scene.add(entranceGlow);
 
     /* ---------- Сборка кофейни ---------- */
-    const refs = CAFE_BUILDER.build(scene, settings);
+    const refs = await CAFE_BUILDER.build(scene, settings);
 
     /* ---------- Частицы ---------- */
     steamSystem = PARTICLES.makeSteamSystem(refs.steamOrigins, settings.steamParticles);
