@@ -61,6 +61,14 @@ const UI = (() => {
     });
   }
 
+  function initOrderShortcuts() {
+    const menu = document.getElementById('s-menu');
+    const topOrder = document.getElementById('topOrder');
+    const contactOrder = document.getElementById('contactOrder');
+    if (topOrder && menu) topOrder.addEventListener('click', () => menu.scrollIntoView({ behavior: 'smooth' }));
+    if (contactOrder) contactOrder.addEventListener('click', () => document.getElementById('orderDialog')?.showModal());
+  }
+
   function initSoundToggle() {
     const btn = document.getElementById('soundToggle');
     if (!btn) return;
@@ -81,6 +89,7 @@ const UI = (() => {
     initScrollProgress();
     initPanelReveal();
     initCtaScroll();
+    initOrderShortcuts();
     initSoundToggle();
     initVisibilityPause();
   }

@@ -82,9 +82,16 @@ async function listOrders(request, env) {
   const query = status && STATUSES.has(status)
     ? env.DB.prepare('SELECT * FROM orders WHERE status = ?1 ORDER BY created_at DESC LIMIT ?2').bind(status, limit)
     : env.DB.prepare('SELECT * FROM orders ORDER BY created_at DESC LIMIT ?1').bind(limit);
-  const result = await query.run();
+  const statsQuery = env.DB.prepare(`SELECT
+    COUNT(*) AS total_count,
+    SUM(CASE WHEN status = 'new' THEN 1 ELSE 0 END) AS new_count,
+    SUM(CASE WHEN status IN ('new','accepted','ready') THEN 1 ELSE 0 END) AS active_count,
+    SUM(CASE WHEN status = 'ready' THEN 1 ELSE 0 END) AS ready_count,
+    COALESCE(SUM(CASE WHEN status = 'completed' THEN total ELSE 0 END), 0) AS completed_revenue
+    FROM orders`);
+  const [result, statsResult] = await env.DB.batch([query, statsQuery]);
   const orders = result.results.map((row) => ({ ...row, items: JSON.parse(row.items_json), items_json: undefined }));
-  return json(request, { orders });
+  return json(request, { orders, stats: statsResult.results[0] });
 }
 async function updateOrder(request, env, id) {
   let body;

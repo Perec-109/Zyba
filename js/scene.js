@@ -27,23 +27,25 @@ const SCENE = (() => {
     if (settings.shadows) renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     // three.js r128 использует outputEncoding (не outputColorSpace из новых версий)
     renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.08;
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x1a100c);
-    scene.fog = new THREE.FogExp2(0x1a100c, settings.fogDensity);
+    scene.background = new THREE.Color(0x180e0a);
+    scene.fog = new THREE.FogExp2(0x180e0a, settings.fogDensity * 0.72);
 
     camera = new THREE.PerspectiveCamera(
-      55, window.innerWidth / window.innerHeight, 0.1, 120
+      50, window.innerWidth / window.innerHeight, 0.1, 120
     );
 
     /* ---------- Свет ---------- */
-    const ambient = new THREE.AmbientLight(0x8a6a52, 0.55);
+    const ambient = new THREE.AmbientLight(0x8a6650, 0.38);
     scene.add(ambient);
 
-    const hemi = new THREE.HemisphereLight(0xffe9c7, 0x1a0f08, 0.45);
+    const hemi = new THREE.HemisphereLight(0xffe6bd, 0x140a06, 0.56);
     scene.add(hemi);
 
-    const keyLight = new THREE.DirectionalLight(0xfff0d0, 0.7);
+    const keyLight = new THREE.DirectionalLight(0xffdfb0, 0.82);
     keyLight.position.set(3, 6, 4);
     if (settings.shadows) {
       keyLight.castShadow = true;
@@ -56,6 +58,10 @@ const SCENE = (() => {
       keyLight.shadow.camera.bottom = -8;
     }
     scene.add(keyLight);
+
+    const entranceGlow = new THREE.PointLight(0xffc47a, 0.75, 18, 2);
+    entranceGlow.position.set(-2.5, 3.8, 2);
+    scene.add(entranceGlow);
 
     /* ---------- Сборка кофейни ---------- */
     const refs = CAFE_BUILDER.build(scene, settings);

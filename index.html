@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="css/style.css?v=20260713-3">
+<link rel="stylesheet" href="css/style.css?v=20260713-4">
 </head>
 <body>
 
@@ -45,8 +45,11 @@
 </div>
 
 <header class="topbar">
-  <div class="logo">ZYBA</div>
+  <div class="brand"><div class="logo">ZYBA</div><span>coffee &amp; roastery</span></div>
   <nav class="topbar-nav">
+    <span class="open-status"><i></i> открыты до 22:00</span>
+    <button class="top-order" id="topOrder">заказать</button>
+    <a class="admin-link" href="admin.html" aria-label="Панель заказов">admin</a>
     <button class="sound-toggle" id="soundToggle" aria-label="Звук" aria-pressed="false">
       <span class="sound-icon"></span>
     </button>
@@ -58,28 +61,30 @@
 
   <section class="station" id="s-hero" data-station="0">
     <div class="panel panel-hero">
-      <p class="eyebrow">specialty coffee · с 2019</p>
-      <h1 class="display-xl">Заходите.<br>Мы уже варим.</h1>
-      <p class="panel-lede">Маленькая кофейня, где обжарка, бар и зал — на расстоянии десяти шагов друг от друга. Прокрутите вниз — и вы буквально войдёте внутрь.</p>
+      <p class="eyebrow">Минск · specialty coffee · с 2019</p>
+      <h1 class="display-xl">Кофе, ради которого<br><em>меняют маршрут.</em></h1>
+      <p class="panel-lede">Обжариваем зерно прямо за баром, помним ваш обычный заказ и не торопим тех, кто пришёл с ноутбуком. Прокрутите вниз — проведём через всю кофейню.</p>
       <button class="cta-scroll" id="ctaScroll">
-        <span>Войти</span>
+        <span>Зайти внутрь</span>
         <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
       </button>
+      <div class="hero-facts"><span><b>4.9</b> рейтинг гостей</span><span><b>7 дней</b> свежесть обжарки</span><span><b>08–22</b> каждый день</span></div>
     </div>
   </section>
 
   <section class="station" id="s-bar" data-station="1">
     <div class="panel panel-side panel-right">
-      <span class="station-index">02 · Бар</span>
-      <h2 class="display-lg">Три способа заварки.<br>Один зерновой поставщик.</h2>
-      <p class="panel-lede">Эспрессо, V60, аэропресс. Зелёное зерно — прямые контракты с фермами Эфиопии и Колумбии, обжарка своя, раз в неделю, малыми партиями.</p>
+      <span class="station-index">02 · Сердце кофейни</span>
+      <h2 class="display-lg">Сначала слышите кофемолку.<br>Потом — аромат.</h2>
+      <p class="panel-lede">Зелёное зерно приезжает от небольших ферм Эфиопии и Колумбии. Каждую партию обжариваем здесь же и настраиваем эспрессо каждое утро.</p>
+      <div class="feature-list"><span>01 <b>Своя обжарка</b></span><span>02 <b>Чистая вода</b></span><span>03 <b>Зерно недели</b></span></div>
     </div>
   </section>
 
   <section class="station" id="s-menu" data-station="2">
     <div class="panel panel-side panel-left panel-menu">
-      <span class="station-index">03 · Меню</span>
-      <h2 class="display-lg">Что варим сегодня</h2>
+      <span class="station-index">03 · Меню сегодня</span>
+      <h2 class="display-lg">Приготовим к вашему приходу</h2>
       <ul class="menu-list">
         <li><span class="m-name">Эспрессо</span><span class="m-dots"></span><span class="m-price">180 ₽</span><button class="menu-add" data-sku="espresso" aria-label="Добавить эспрессо">+</button></li>
         <li><span class="m-name">Флэт уайт</span><span class="m-dots"></span><span class="m-price">280 ₽</span><button class="menu-add" data-sku="flat-white" aria-label="Добавить флэт уайт">+</button></li>
@@ -94,22 +99,23 @@
   <section class="station" id="s-hall" data-station="3">
     <div class="panel panel-side panel-right">
       <span class="station-index">04 · Зал</span>
-      <h2 class="display-lg">Тут можно зависнуть<br>с ноутбуком до вечера</h2>
-      <p class="panel-lede">Розетки у каждого стола, wi-fi без пароля на кассе, растения, которые правда поливают. Один столик специально развёрнут к окну — лучший в городе вид на дождь.</p>
+      <h2 class="display-lg">Место для паузы.<br>На двадцать минут или весь день.</h2>
+      <p class="panel-lede">Тёплый свет, розетки у каждого стола и Wi‑Fi, который не просит пароль каждые полчаса. У окна — длинная банкетка, в глубине — тихий стол на двоих.</p>
+      <div class="amenities"><span>Wi‑Fi 300 Мбит/с</span><span>Розетки у столов</span><span>Можно с питомцами</span></div>
     </div>
   </section>
 
   <section class="station" id="s-contact" data-station="4">
     <div class="panel panel-hero panel-contact">
-      <span class="station-index">05 · Контакты</span>
+      <span class="station-index">05 · До встречи</span>
       <h2 class="display-lg">Ул. Прянкая, 12</h2>
-      <p class="panel-lede">Открыты каждый день, 8:00–22:00. Бариста на месте, столик у окна — почти всегда занят, но мы всё равно ждём вас.</p>
+      <p class="panel-lede">Каждый день с 08:00 до 22:00. Закажите заранее — соберём напитки к вашему приходу. Или заходите без плана: свободный стул обычно находится.</p>
       <div class="contact-grid">
-        <a href="#" class="contact-item">Телеграм-бот заказов</a>
-        <a href="#" class="contact-item">Маршрут на карте</a>
-        <a href="#" class="contact-item">+7 (900) 000-00-00</a>
+        <button class="contact-item contact-order" id="contactOrder">Заказать с собой</button>
+        <a href="https://maps.google.com/?q=Минск" class="contact-item" target="_blank" rel="noreferrer">Маршрут на карте</a>
+        <a href="tel:+375290000000" class="contact-item">+375 (29) 000-00-00</a>
       </div>
-      <p class="footer-note">© 2026 Zyba. Все зёрна обжарены на месте.</p>
+      <p class="footer-note">© 2026 Zyba · обжарено, сварено и выпито в Минске.</p>
     </div>
   </section>
 
@@ -134,12 +140,12 @@
 <script src="js/vendor/three.min.js"></script>
 
 <script src="js/perf.js?v=20260713-2"></script>
-<script src="js/cafe-scene-builder.js?v=20260713-2"></script>
+<script src="js/cafe-scene-builder.js?v=20260713-4"></script>
 <script src="js/particles.js?v=20260713-2"></script>
 <script src="js/camera-path.js?v=20260713-2"></script>
-<script src="js/scene.js?v=20260713-2"></script>
+<script src="js/scene.js?v=20260713-4"></script>
 <script src="js/sound.js?v=20260713-2"></script>
-<script src="js/ui.js?v=20260713-2"></script>
+<script src="js/ui.js?v=20260713-4"></script>
 <script src="js/main.js?v=20260713-2"></script>
 <script src="js/orders.js?v=20260713-3"></script>
 </body>
