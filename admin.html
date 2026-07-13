@@ -20,7 +20,7 @@
       <p class="eyebrow">Только для команды</p>
       <h1>Вход в админку</h1>
       <p>Введите секретный токен. Он хранится только до закрытия этой вкладки.</p>
-      <form id="loginForm"><input id="tokenInput" type="password" autocomplete="current-password" placeholder="Токен администратора" required><button>Войти</button></form>
+      <form id="loginForm" autocomplete="off"><input id="tokenInput" type="password" autocomplete="one-time-code" data-1p-ignore data-lpignore="true" data-form-type="other" placeholder="Токен администратора" required><button>Войти</button></form>
       <p class="message" id="loginMessage"></p>
     </section>
     <section id="dashboard" hidden>
