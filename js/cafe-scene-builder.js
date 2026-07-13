@@ -122,15 +122,36 @@ const CAFE_BUILDER = (() => {
   }
   function buildEntrance(scene) {
     const g = new THREE.Group();
-    // Open center aisle; storefront elements stay at the sides.
-    const leftWindow = windowPane(2.15, 2.6); leftWindow.position.set(-3.62, 1.75, -2.4); g.add(leftWindow);
-    const doorFrame = new THREE.Group();
-    [[1.55, .09, 0, 2.34], [.09, 2.42, -.77, 1.17], [.09, 2.42, .77, 1.17]].forEach(([w,h,x,y]) => { const r = box(w,h,.1,M.woodDark); r.position.set(x,y,0); doorFrame.add(r); });
-    doorFrame.position.set(3.65, 0, -2.35); g.add(doorFrame);
-    const sign = poster(1.55, .65, labelTexture('ZYBA', ['COFFEE · ROASTERY'])); sign.position.set(0, 3.45, -2.55); g.add(sign);
+    const facadeZ = -2.45;
+
+    // Полноценная стеклянная входная группа вместо пустой рамки.
+    const header = box(9.7, .22, .32, M.woodDark); header.position.set(0, 3.16, facadeZ); g.add(header);
+    const base = box(9.7, .14, .36, M.woodDark); base.position.set(0, .08, facadeZ); g.add(base);
+    [-4.82, -2.22, .42, 1.7, 3.42, 4.82].forEach(x => {
+      const mullion = box(.11, 3.05, .2, M.woodDark); mullion.position.set(x, 1.57, facadeZ); g.add(mullion);
+    });
+
+    const leftWindow = windowPane(2.45, 2.75); leftWindow.position.set(-3.52, 1.61, facadeZ); g.add(leftWindow);
+    const centerWindow = windowPane(2.45, 2.75); centerWindow.position.set(-.9, 1.61, facadeZ); g.add(centerWindow);
+    const rightWindow = windowPane(1.25, 2.75); rightWindow.position.set(4.12, 1.61, facadeZ); g.add(rightWindow);
+
+    // Дверь приоткрыта внутрь: сразу понятно, где вход и куда идти.
+    const door = new THREE.Group();
+    const doorGlass = box(1.55, 2.68, .035, M.glass, false); doorGlass.position.set(.78, 1.42, 0); door.add(doorGlass);
+    [[1.62,.09,.78,2.78],[1.62,.09,.78,.06],[.09,2.8,.04,1.42],[.09,2.8,1.52,1.42],[1.52,.07,.78,.72]].forEach(([w,h,x,y])=>{
+      const rail=box(w,h,.1,M.woodDark);rail.position.set(x,y,.025);door.add(rail);
+    });
+    const handle = cyl(.025,.025,.48,M.brass,10); handle.position.set(1.28,1.45,.1); door.add(handle);
+    door.position.set(1.72, .08, facadeZ + .06); door.rotation.y = .58; g.add(door);
+
+    const threshold = box(1.85,.07,.52,M.brass); threshold.position.set(2.56,.08,facadeZ+.06); g.add(threshold);
+    const matIn = box(1.35,.025,.8,mat(0x2b211c,{roughness:1}),false); matIn.position.set(2.55,.025,facadeZ+1); g.add(matIn);
+    const openSign = poster(.72,.42,labelTexture('OPEN',['08 — 22'])); openSign.position.set(4.12,1.75,facadeZ+.09); openSign.scale.set(.72,.72,.72); g.add(openSign);
+    const sign = poster(2.15, .72, labelTexture('ZYBA', ['COFFEE · ROASTERY'])); sign.position.set(2.55, 3.75, facadeZ); g.add(sign);
+
     const bench = box(1.65, .12, .55, M.woodLight); bench.position.set(-3.45, .45, .2); g.add(bench);
-    const legs = [-4.05, -2.85]; legs.forEach(x => { const l=box(.09,.45,.45,M.black); l.position.set(x,.22,.2); g.add(l); });
-    const p = plant(3, .85); p.position.set(3.65, 0, .1); g.add(p);
+    [-4.05, -2.85].forEach(x => { const l=box(.09,.45,.45,M.black); l.position.set(x,.22,.2); g.add(l); });
+    const p = plant(3, .85); p.position.set(4.25, 0, -.8); g.add(p);
     scene.add(g); return g;
   }
   function buildBar(scene) {
