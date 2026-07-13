@@ -7,32 +7,20 @@ const CAMERA_PATH = (() => {
   function build() {
     // Точки положения камеры (walk-through высота ~1.6м)
     const posPoints = [
-      new THREE.Vector3(0, 1.6, 4.5),     // старт — снаружи витрины
-      new THREE.Vector3(0, 1.6, -1),      // входим
-      new THREE.Vector3(-1.6, 1.55, -10), // подходим к бару
-      new THREE.Vector3(-2.2, 1.5, -21),  // у бара
-      new THREE.Vector3(-1.0, 1.55, -33), // движемся к меню
-      new THREE.Vector3(0.4, 1.55, -44),  // у меню
-      new THREE.Vector3(1.2, 1.6, -56),   // в зал
-      new THREE.Vector3(-1.0, 1.6, -66),  // между столиками
-      new THREE.Vector3(0.6, 1.55, -76),  // к нише
-      new THREE.Vector3(1.0, 1.5, -85),   // сбоку от дивана, безопасный коридор
-      new THREE.Vector3(0.8, 1.5, -88.5), // финал — до дивана и окна, без клиппинга
+      new THREE.Vector3(0, 1.6, 4.5),
+      new THREE.Vector3(2.15, 1.52, -18.3),
+      new THREE.Vector3(-0.45, 1.58, -40.2),
+      new THREE.Vector3(0.65, 1.58, -62.5),
+      new THREE.Vector3(0.8, 1.5, -87.2),
     ];
 
     // Точки взгляда (look-at target), чуть впереди по маршруту
     const lookPoints = [
-      new THREE.Vector3(0, 1.7, -2),
-      new THREE.Vector3(0, 1.7, -8),
-      new THREE.Vector3(-2.4, 1.5, -18),
-      new THREE.Vector3(-1.6, 1.6, -24),
-      new THREE.Vector3(-1.0, 1.9, -40),
-      new THREE.Vector3(0.6, 1.8, -46),
-      new THREE.Vector3(0.6, 1.6, -60),
-      new THREE.Vector3(0, 1.5, -70),
-      new THREE.Vector3(0.3, 1.6, -80),
-      new THREE.Vector3(0.2, 1.7, -90),
-      new THREE.Vector3(0, 1.85, -93),
+      new THREE.Vector3(0, 1.72, -7),
+      new THREE.Vector3(-1.55, 1.48, -22),
+      new THREE.Vector3(3.15, 1.9, -44),
+      new THREE.Vector3(-0.25, 1.42, -68),
+      new THREE.Vector3(-0.25, 1.72, -94),
     ];
 
     const posCurve = new THREE.CatmullRomCurve3(posPoints, false, 'catmullrom', 0.4);
@@ -47,8 +35,8 @@ const CAMERA_PATH = (() => {
    */
   function applyToCamera(camera, curves, t, wobbleTime, enableWobble) {
     const clamped = THREE.MathUtils.clamp(t, 0, 1);
-    const pos = curves.posCurve.getPointAt(clamped);
-    const look = curves.lookCurve.getPointAt(clamped);
+    const pos = curves.posCurve.getPoint(clamped);
+    const look = curves.lookCurve.getPoint(clamped);
 
     let wobbleX = 0, wobbleY = 0;
     if (enableWobble) {

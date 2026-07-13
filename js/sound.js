@@ -27,24 +27,37 @@ const SOUND = (() => {
 
     const filter = ctx.createBiquadFilter();
     filter.type = 'lowpass';
-    filter.frequency.value = 900;
+    filter.frequency.value = 1250;
+
+    const warmth = ctx.createBiquadFilter();
+    warmth.type = 'peaking';
+    warmth.frequency.value = 180;
+    warmth.Q.value = 0.8;
+    warmth.gain.value = 5;
 
     gainNode = ctx.createGain();
     gainNode.gain.value = 0;
 
-    source.connect(filter).connect(gainNode).connect(ctx.destination);
+    source.connect(filter).connect(warmth).connect(gainNode).connect(ctx.destination);
     source.start(0);
   }
 
-  function toggle() {
-    ensureContext();
-    if (ctx.state === 'suspended') ctx.resume();
-
-    enabled = !enabled;
-    const target = enabled ? 0.05 : 0;
-    gainNode.gain.cancelScheduledValues(ctx.currentTime);
-    gainNode.gain.linearRampToValueAtTime(target, ctx.currentTime + 0.8);
-    return enabled;
+  async function toggle() {
+    try {
+      ensureContext();
+      if (ctx.state === 'suspended') await ctx.resume();
+      enabled = !enabled;
+      const now = ctx.currentTime;
+      const target = enabled ? 0.085 : 0;
+      gainNode.gain.cancelScheduledValues(now);
+      gainNode.gain.setValueAtTime(gainNode.gain.value, now);
+      gainNode.gain.linearRampToValueAtTime(target, now + 0.45);
+      return enabled;
+    } catch (error) {
+      console.warn('Не удалось запустить атмосферу кофейни', error);
+      enabled = false;
+      return false;
+    }
   }
 
   return { toggle };

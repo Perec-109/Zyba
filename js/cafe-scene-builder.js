@@ -142,7 +142,11 @@ const CAFE_BUILDER = (() => {
     const topRail=box(1.3,.08,.66,M.black); topRail.position.y=.66; machine.add(topRail);
     [-.34,.34].forEach(x => { const head=cyl(.065,.065,.18,M.brass,12); head.rotation.x=Math.PI/2; head.position.set(x,.18,.36); machine.add(head); const handle=box(.3,.025,.025,M.black); handle.position.set(x+.16,.18,.47); machine.add(handle); });
     const gauge=cyl(.1,.1,.025,M.cream,18); gauge.rotation.x=Math.PI/2; gauge.position.set(0,.43,.325); machine.add(gauge); machine.position.set(-2.7,1.04,z-.12); g.add(machine);
+    const wand=cyl(.012,.012,.42,M.steel,8); wand.rotation.z=-.22; wand.position.set(-.54,.05,.34); machine.add(wand);
+    [-.38,0,.38].forEach(x=>{const knob=cyl(.035,.035,.035,M.black,12);knob.rotation.x=Math.PI/2;knob.position.set(x,.53,.35);machine.add(knob);});
     const grinder = new THREE.Group(); const base=box(.32,.3,.3,M.black); base.position.y=.18; grinder.add(base); const hopper=cyl(.12,.19,.38,M.glass,14); hopper.position.y=.52; grinder.add(hopper); grinder.position.set(-1.55,1.03,z-.12); g.add(grinder);
+    const pitcher=cyl(.11,.085,.21,M.steel,16);pitcher.position.set(-2.02,1.14,z+.27);g.add(pitcher);
+    const tampMat=box(.62,.025,.32,M.black);tampMat.position.set(-1.32,1.06,z+.31);g.add(tampMat);
     const pastry = new THREE.Group(); const caseBox=box(1.15,.48,.55,M.glass); caseBox.position.y=.28; pastry.add(caseBox); for(let i=0;i<3;i++){const croissant=mesh(new THREE.TorusGeometry(.1,.035,6,12,Math.PI*1.35),mat(0xd99a53,{roughness:.9}));croissant.rotation.x=Math.PI/2;croissant.position.set(-.35+i*.35,.24,.3);pastry.add(croissant);} pastry.position.set(-.35,1.04,z-.1); g.add(pastry);
     for (let row = 0; row < 2; row++) { const shelf=box(4.5,.055,.28,M.woodLight); shelf.position.set(-1.4,2+row*.58,z-.82); g.add(shelf); for(let i=0;i<7;i++){const jar=cyl(.075,.085,.21,i%2?M.glass:M.cream,12);jar.position.set(-3.25+i*.62,2.14+row*.58,z-.79);g.add(jar);} }
     [[-.1,.27],[.4,.18],[-3.55,.31]].forEach(([x,dz]) => { const c=cup(); c.position.set(x,1.08,z+dz); g.add(c); steamOrigins.push(new THREE.Vector3(x,1.22,z+dz)); });
@@ -170,8 +174,11 @@ const CAFE_BUILDER = (() => {
   function buildNook(scene, detail) {
     const g=new THREE.Group();const z=-91;
     const w=windowPane(3.8,3.35);w.position.set(0,2,z-3.8);g.add(w);
-    const bench=box(2.8,.52,.82,M.woodDark);bench.position.set(-.5,.27,z-2.9);g.add(bench);const cushion=box(2.65,.18,.72,M.fabric);cushion.position.set(-.5,.61,z-2.9);g.add(cushion);const back=box(2.65,.75,.18,M.fabric);back.position.set(-.5,1,z-3.22);g.add(back);
-    const side=box(.7,.48,.7,M.woodLight);side.position.set(1.65,.25,z-2.7);g.add(side);const c=cup();c.position.set(1.65,.5,z-2.7);g.add(c);
+    const bench=box(2.8,.52,.82,M.woodDark);bench.position.set(-.5,.27,z-2.9);g.add(bench);
+    [-1.35,-.5,.35].forEach((x,i)=>{const cushion=sphere(.48,i===1?M.sage:M.fabric,18,12);cushion.scale.set(.86,.22,.68);cushion.position.set(x,.66,z-2.88);g.add(cushion);});
+    [-1.25,-.25,.55].forEach((x,i)=>{const back=sphere(.52,i===1?M.fabric:M.sage,18,12);back.scale.set(.76,.72,.2);back.position.set(x,1.03+(i%2)*.04,z-3.18);back.rotation.z=(i-1)*.08;g.add(back);});
+    const sideTop=cyl(.42,.42,.07,M.woodLight,24);sideTop.position.set(1.65,.52,z-2.7);g.add(sideTop);const sideLeg=cyl(.055,.075,.48,M.black,10);sideLeg.position.set(1.65,.26,z-2.7);g.add(sideLeg);const c=cup();c.position.set(1.65,.57,z-2.7);g.add(c);
+    const rug=mesh(new THREE.CircleGeometry(1.5,32),mat(0x6f4938,{roughness:1}),false);rug.rotation.x=-Math.PI/2;rug.scale.set(1.45,1,1);rug.position.set(-.2,.025,z-1.8);g.add(rug);
     const p=plant(detail,1.05);p.position.set(-2.5,0,z-2.6);g.add(p);const l=pendant(.85);l.position.set(.4,4.25,z-2.5);g.add(l);scene.add(g);
   }
   function build(scene, settings) {

@@ -25,6 +25,7 @@ const UI = (() => {
 
       const activeIdx = Math.round(t * (stations.length - 1));
       dots.forEach((d, i) => d.classList.toggle('active', i === activeIdx));
+      stations.forEach((station, i) => station.classList.toggle('active-station', i === activeIdx));
     }
 
     let ticking = false;
@@ -72,9 +73,13 @@ const UI = (() => {
   function initSoundToggle() {
     const btn = document.getElementById('soundToggle');
     if (!btn) return;
-    btn.addEventListener('click', () => {
-      const isOn = SOUND.toggle();
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      const isOn = await SOUND.toggle();
       btn.setAttribute('aria-pressed', String(isOn));
+      btn.setAttribute('aria-label', isOn ? 'Выключить атмосферу кофейни' : 'Включить атмосферу кофейни');
+      btn.title = isOn ? 'Атмосфера включена' : 'Включить звук';
+      btn.disabled = false;
     });
   }
 
@@ -87,7 +92,6 @@ const UI = (() => {
 
   function init() {
     initScrollProgress();
-    initPanelReveal();
     initCtaScroll();
     initOrderShortcuts();
     initSoundToggle();
